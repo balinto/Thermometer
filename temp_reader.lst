@@ -1,0 +1,328 @@
+   1               		.file	"temp_reader.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.global __do_copy_data
+   8               		.global __do_clear_bss
+  16               	.Ltext0:
+  17               	.global	Timer0_Init
+  19               	Timer0_Init:
+  20               	.LFB9:
+  21               	.LM1:
+  22               	/* prologue: frame size=0 */
+  23               	/* prologue end (size=0) */
+  24               	.LM2:
+  25 0000 86E0      		ldi r24,lo8(6)
+  26 0002 83BF      		out 83-0x20,r24
+  27               	.LM3:
+  28 0004 12BE      		out 82-0x20,__zero_reg__
+  29               	.LM4:
+  30 0006 81E0      		ldi r24,lo8(1)
+  31 0008 87BF      		out 87-0x20,r24
+  32               	/* epilogue: frame size=0 */
+  33 000a 0895      		ret
+  34               	/* epilogue end (size=1) */
+  35               	/* function Timer0_Init size 6 (5) */
+  36               	.LFE9:
+  38               	.global	__vector_16
+  40               	__vector_16:
+  41               	.LFB7:
+  42               	.LM5:
+  43               	/* prologue: frame size=0 */
+  44 000c 1F92      		push __zero_reg__
+  45 000e 0F92      		push __tmp_reg__
+  46 0010 0FB6      		in __tmp_reg__,__SREG__
+  47 0012 0F92      		push __tmp_reg__
+  48 0014 1124      		clr __zero_reg__
+  49 0016 EF92      		push r14
+  50 0018 FF92      		push r15
+  51 001a 0F93      		push r16
+  52 001c 1F93      		push r17
+  53 001e 2F93      		push r18
+  54 0020 3F93      		push r19
+  55 0022 4F93      		push r20
+  56 0024 5F93      		push r21
+  57 0026 6F93      		push r22
+  58 0028 7F93      		push r23
+  59 002a 8F93      		push r24
+  60 002c 9F93      		push r25
+  61 002e AF93      		push r26
+  62 0030 BF93      		push r27
+  63 0032 EF93      		push r30
+  64 0034 FF93      		push r31
+  65               	/* prologue end (size=21) */
+  66               	.LM6:
+  67 0036 8091 0000 		lds r24,led_counter
+  68 003a 8F5F      		subi r24,lo8(-(1))
+  69 003c 8093 0000 		sts led_counter,r24
+  70               	.LM7:
+  71 0040 8F33      		cpi r24,lo8(63)
+  72 0042 00F4      		brsh .L4
+  73               	.LM8:
+  74 0044 DF98      		cbi 59-0x20,7
+  75 0046 00C0      		rjmp .L15
+  76               	.L4:
+  77               	.LM9:
+  78 0048 8E37      		cpi r24,lo8(126)
+  79 004a 00F4      		brsh .L7
+  80 004c DF9A      		sbi 59-0x20,7
+  81 004e 00C0      		rjmp .L15
+  82               	.L7:
+  83               	.LM10:
+  84 0050 21E0      		ldi r18,lo8(1)
+  85 0052 41E0      		ldi r20,lo8(1)
+  86 0054 61E0      		ldi r22,lo8(1)
+  87 0056 80E0      		ldi r24,lo8(temp_sensor)
+  88 0058 90E0      		ldi r25,hi8(temp_sensor)
+  89 005a 0E94 0000 		call dpy_trm_s01__Temp_ReadTEMP
+  90 005e 8093 0000 		sts err,r24
+  91               	.LM11:
+  92 0062 E090 0000 		lds r14,temp_sensor
+  93 0066 F090 0000 		lds r15,(temp_sensor)+1
+  94 006a 0091 0000 		lds r16,(temp_sensor)+2
+  95 006e 1091 0000 		lds r17,(temp_sensor)+3
+  96 0072 2091 0000 		lds r18,min
+  97 0076 3091 0000 		lds r19,(min)+1
+  98 007a 4091 0000 		lds r20,(min)+2
+  99 007e 5091 0000 		lds r21,(min)+3
+ 100 0082 C801      		movw r24,r16
+ 101 0084 B701      		movw r22,r14
+ 102 0086 0E94 0000 		call __ltsf2
+ 103 008a 8823      		tst r24
+ 104 008c 04F4      		brge .L9
+ 105 008e E092 0000 		sts min,r14
+ 106 0092 F092 0000 		sts (min)+1,r15
+ 107 0096 0093 0000 		sts (min)+2,r16
+ 108 009a 1093 0000 		sts (min)+3,r17
+ 109               	.L9:
+ 110               	.LM12:
+ 111 009e 2091 0000 		lds r18,max
+ 112 00a2 3091 0000 		lds r19,(max)+1
+ 113 00a6 4091 0000 		lds r20,(max)+2
+ 114 00aa 5091 0000 		lds r21,(max)+3
+ 115 00ae C801      		movw r24,r16
+ 116 00b0 B701      		movw r22,r14
+ 117 00b2 0E94 0000 		call __gtsf2
+ 118 00b6 1816      		cp __zero_reg__,r24
+ 119 00b8 04F4      		brge .L12
+ 120 00ba E092 0000 		sts max,r14
+ 121 00be F092 0000 		sts (max)+1,r15
+ 122 00c2 0093 0000 		sts (max)+2,r16
+ 123 00c6 1093 0000 		sts (max)+3,r17
+ 124               	.L12:
+ 125               	.LM13:
+ 126 00ca 1092 0000 		sts led_counter,__zero_reg__
+ 127               	.L15:
+ 128               	/* epilogue: frame size=0 */
+ 129 00ce FF91      		pop r31
+ 130 00d0 EF91      		pop r30
+ 131 00d2 BF91      		pop r27
+ 132 00d4 AF91      		pop r26
+ 133 00d6 9F91      		pop r25
+ 134 00d8 8F91      		pop r24
+ 135 00da 7F91      		pop r23
+ 136 00dc 6F91      		pop r22
+ 137 00de 5F91      		pop r21
+ 138 00e0 4F91      		pop r20
+ 139 00e2 3F91      		pop r19
+ 140 00e4 2F91      		pop r18
+ 141 00e6 1F91      		pop r17
+ 142 00e8 0F91      		pop r16
+ 143 00ea FF90      		pop r15
+ 144 00ec EF90      		pop r14
+ 145 00ee 0F90      		pop __tmp_reg__
+ 146 00f0 0FBE      		out __SREG__,__tmp_reg__
+ 147 00f2 0F90      		pop __tmp_reg__
+ 148 00f4 1F90      		pop __zero_reg__
+ 149 00f6 1895      		reti
+ 150               	/* epilogue end (size=21) */
+ 151               	/* function __vector_16 size 120 (78) */
+ 152               	.LFE7:
+ 154               	.global	main
+ 156               	main:
+ 157               	.LFB8:
+ 158               	.LM14:
+ 159               	/* prologue: frame size=0 */
+ 160               	/* prologue end (size=0) */
+ 161               	.LM15:
+ 162 00f8 0E94 0000 		call dpy_trm_s01__Init
+ 163               	.LBB4:
+ 164               	.LBB5:
+ 165               	.LM16:
+ 166 00fc 86E0      		ldi r24,lo8(6)
+ 167 00fe 83BF      		out 83-0x20,r24
+ 168               	.LM17:
+ 169 0100 12BE      		out 82-0x20,__zero_reg__
+ 170               	.LM18:
+ 171 0102 81E0      		ldi r24,lo8(1)
+ 172 0104 87BF      		out 87-0x20,r24
+ 173               	.LBE5:
+ 174               	.LBE4:
+ 175               	.LM19:
+ 176 0106 41E0      		ldi r20,lo8(1)
+ 177 0108 61E0      		ldi r22,lo8(1)
+ 178 010a 0E94 0000 		call dpy_trm_s01__Temp_Init
+ 179               	.LM20:
+ 180 010e 8F9A      		sbi 49-0x20,7
+ 181               	.LM21:
+ 182 0110 979A      		sbi 50-0x20,7
+ 183               	.LM22:
+ 184               	/* #APP */
+ 185 0112 7894      		sei
+ 186               	.LM23:
+ 187               	/* #NOAPP */
+ 188 0114 86E6      		ldi r24,lo8(0x41c26666)
+ 189 0116 96E6      		ldi r25,hi8(0x41c26666)
+ 190 0118 A2EC      		ldi r26,hlo8(0x41c26666)
+ 191 011a B1E4      		ldi r27,hhi8(0x41c26666)
+ 192 011c 8093 0000 		sts temp_sensor,r24
+ 193 0120 9093 0000 		sts (temp_sensor)+1,r25
+ 194 0124 A093 0000 		sts (temp_sensor)+2,r26
+ 195 0128 B093 0000 		sts (temp_sensor)+3,r27
+ 196               	.L17:
+ 197               	.LM24:
+ 198 012c 89B3      		in r24,57-0x20
+ 199 012e 682F      		mov r22,r24
+ 200 0130 70E0      		ldi r23,lo8(0)
+ 201 0132 6270      		andi r22,lo8(2)
+ 202 0134 7070      		andi r23,hi8(2)
+ 203 0136 7595      		asr r23
+ 204 0138 6795      		ror r22
+ 205 013a 6093 0000 		sts but1,r22
+ 206               	.LM25:
+ 207 013e 89B3      		in r24,57-0x20
+ 208 0140 482F      		mov r20,r24
+ 209 0142 50E0      		ldi r21,lo8(0)
+ 210 0144 4470      		andi r20,lo8(4)
+ 211 0146 5070      		andi r21,hi8(4)
+ 212 0148 5595      		asr r21
+ 213 014a 4795      		ror r20
+ 214 014c 5595      		asr r21
+ 215 014e 4795      		ror r20
+ 216 0150 4093 0000 		sts but2,r20
+ 217               	.LM26:
+ 218 0154 89B3      		in r24,57-0x20
+ 219 0156 282F      		mov r18,r24
+ 220 0158 30E0      		ldi r19,lo8(0)
+ 221 015a 2870      		andi r18,lo8(8)
+ 222 015c 3070      		andi r19,hi8(8)
+ 223 015e 83E0      		ldi r24,3
+ 224 0160 3595      	1:	asr r19
+ 225 0162 2795      		ror r18
+ 226 0164 8A95      		dec r24
+ 227 0166 01F4      		brne 1b
+ 228 0168 2093 0000 		sts but3,r18
+ 229               	.LM27:
+ 230 016c 8091 0000 		lds r24,cntr
+ 231 0170 9091 0000 		lds r25,(cntr)+1
+ 232 0174 885E      		subi r24,lo8(1000)
+ 233 0176 9340      		sbci r25,hi8(1000)
+ 234 0178 04F0      		brlt .L18
+ 235               	.LM28:
+ 236 017a 2223      		tst r18
+ 237 017c 01F4      		brne .L20
+ 238 017e 6091 0000 		lds r22,min
+ 239 0182 7091 0000 		lds r23,(min)+1
+ 240 0186 8091 0000 		lds r24,(min)+2
+ 241 018a 9091 0000 		lds r25,(min)+3
+ 242 018e 00C0      		rjmp .L28
+ 243               	.L20:
+ 244               	.LM29:
+ 245 0190 4423      		tst r20
+ 246 0192 01F4      		brne .L23
+ 247 0194 6091 0000 		lds r22,temp_sensor
+ 248 0198 7091 0000 		lds r23,(temp_sensor)+1
+ 249 019c 8091 0000 		lds r24,(temp_sensor)+2
+ 250 01a0 9091 0000 		lds r25,(temp_sensor)+3
+ 251               	.L28:
+ 252 01a4 41E0      		ldi r20,lo8(1)
+ 253 01a6 0E94 0000 		call dpy_trm_s01__7seq_write_number
+ 254 01aa 00C0      		rjmp .L22
+ 255               	.L23:
+ 256               	.LM30:
+ 257 01ac 6623      		tst r22
+ 258 01ae 01F4      		brne .L25
+ 259 01b0 6091 0000 		lds r22,max
+ 260 01b4 7091 0000 		lds r23,(max)+1
+ 261 01b8 8091 0000 		lds r24,(max)+2
+ 262 01bc 9091 0000 		lds r25,(max)+3
+ 263 01c0 00C0      		rjmp .L28
+ 264               	.L25:
+ 265               	.LM31:
+ 266 01c2 0E94 0000 		call dpy_trm_s01__7seq_clear_dpy
+ 267               	.L22:
+ 268               	.LM32:
+ 269 01c6 1092 0000 		sts (cntr)+1,__zero_reg__
+ 270 01ca 1092 0000 		sts cntr,__zero_reg__
+ 271               	.L18:
+ 272               	.LM33:
+ 273 01ce 8091 0000 		lds r24,cntr
+ 274 01d2 9091 0000 		lds r25,(cntr)+1
+ 275 01d6 0196      		adiw r24,1
+ 276 01d8 9093 0000 		sts (cntr)+1,r25
+ 277 01dc 8093 0000 		sts cntr,r24
+ 278 01e0 00C0      		rjmp .L17
+ 279               	/* epilogue: frame size=0 */
+ 280               	/* epilogue: noreturn */
+ 281               	/* epilogue end (size=0) */
+ 282               	/* function main size 119 (119) */
+ 283               	.LFE8:
+ 285               	.global	led_counter
+ 286               	.global	led_counter
+ 287               		.section .bss
+ 290               	led_counter:
+ 291 0000 00        		.skip 1,0
+ 292               	.global	min
+ 293               		.data
+ 296               	min:
+ 297 0000 00        		.byte	0
+ 298 0001 00        		.byte	0
+ 299 0002 C6        		.byte	-58
+ 300 0003 42        		.byte	66
+ 301               	.global	max
+ 302               	.global	max
+ 303               		.section .bss
+ 306               	max:
+ 307 0001 0000 0000 		.skip 4,0
+ 308               	.global	cntr
+ 309               	.global	cntr
+ 312               	cntr:
+ 313 0005 0000      		.skip 2,0
+ 314               		.comm err,1,1
+ 315               		.comm temp_sensor,4,1
+ 316               		.comm but1,1,1
+ 317               		.comm but2,1,1
+ 318               		.comm but3,1,1
+ 359               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 temp_reader.c
+C:\Users\DarkSide\AppData\Local\Temp/ccZbJXIc.s:2      *ABS*:0000003f __SREG__
+C:\Users\DarkSide\AppData\Local\Temp/ccZbJXIc.s:3      *ABS*:0000003e __SP_H__
+C:\Users\DarkSide\AppData\Local\Temp/ccZbJXIc.s:4      *ABS*:0000003d __SP_L__
+C:\Users\DarkSide\AppData\Local\Temp/ccZbJXIc.s:5      *ABS*:00000000 __tmp_reg__
+C:\Users\DarkSide\AppData\Local\Temp/ccZbJXIc.s:6      *ABS*:00000001 __zero_reg__
+C:\Users\DarkSide\AppData\Local\Temp/ccZbJXIc.s:19     .text:00000000 Timer0_Init
+C:\Users\DarkSide\AppData\Local\Temp/ccZbJXIc.s:40     .text:0000000c __vector_16
+C:\Users\DarkSide\AppData\Local\Temp/ccZbJXIc.s:290    .bss:00000000 led_counter
+                            *COM*:00000004 temp_sensor
+                            *COM*:00000001 err
+C:\Users\DarkSide\AppData\Local\Temp/ccZbJXIc.s:296    .data:00000000 min
+C:\Users\DarkSide\AppData\Local\Temp/ccZbJXIc.s:306    .bss:00000001 max
+C:\Users\DarkSide\AppData\Local\Temp/ccZbJXIc.s:156    .text:000000f8 main
+                            *COM*:00000001 but1
+                            *COM*:00000001 but2
+                            *COM*:00000001 but3
+C:\Users\DarkSide\AppData\Local\Temp/ccZbJXIc.s:312    .bss:00000005 cntr
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss
+dpy_trm_s01__Temp_ReadTEMP
+__ltsf2
+__gtsf2
+dpy_trm_s01__Init
+dpy_trm_s01__Temp_Init
+dpy_trm_s01__7seq_write_number
+dpy_trm_s01__7seq_clear_dpy
